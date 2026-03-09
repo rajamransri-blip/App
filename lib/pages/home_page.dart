@@ -22,9 +22,11 @@ class _HomePageState extends State<HomePage> {
         children: pages,
       ),
       bottomNavigationBar: BottomNavigationBar(
-        iconSize: 35,
-        selectedFontSize: 0,
-        unselectedFontSize: 0,
+        iconSize: 30,
+        selectedItemColor: Theme.of(context).colorScheme.primary,
+        unselectedItemColor: Colors.grey,
+        selectedFontSize: 12,
+        unselectedFontSize: 12,
         onTap: (value) {
           setState(() {
             currentPage = value;
@@ -33,12 +35,12 @@ class _HomePageState extends State<HomePage> {
         currentIndex: currentPage,
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: '',
+            icon: Icon(Icons.menu_book),
+            label: 'Read',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.shopping_cart),
-            label: '',
+            icon: Icon(Icons.bookmark),
+            label: 'Saved',
           ),
         ],
       ),
