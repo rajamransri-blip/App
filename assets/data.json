@@ -1,0 +1,41 @@
+{
+  "settings": {
+    "communityEnabled": true,
+    "showContactUs": true,
+    "contactEmail": "support@islamicapp.com",
+    "aboutAppText": "IRaaz App v1.0\nDeveloped by Raaz."
+  },
+  "update": {
+    "latestVersion": "1.0.0",
+    "updateUrl": "https://github.com/rajamransri-blip"
+  },
+  "items": [
+    {
+      "id": "0",
+      "title": "Ayatul Kursi",
+      "shortDescription": "The Verse of the Throne",
+      "arabic": "اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ ۚ...",
+      "translation": "Allah! There is no deity except Him, the Ever-Living...",
+      "category": "Ayah",
+      "imageUrl": "assets/images/ayah.png"
+    },
+    {
+      "id": "1",
+      "title": "Dua for Forgiveness",
+      "shortDescription": "Seek Allah's mercy",
+      "arabic": "رَبَّنَا ظَلَمْنَا أَنفُسَنَا وَإِن لَّمْ تَغْفِرْ لَنَا...",
+      "translation": "Our Lord, we have wronged ourselves...",
+      "category": "Duas",
+      "imageUrl": "assets/images/dua.png"
+    },
+    {
+      "id": "2",
+      "title": "Sajdah (Prostration)",
+      "shortDescription": "What to say during Sajdah",
+      "arabic": "سُبْحَانَ رَبِّيَ الأَعْلَى",
+      "translation": "Glory is to my Lord, the Most High.",
+      "category": "Namaz ka tarika",
+      "imageUrl": "assets/images/namaz.png"
+    }
+  ]
+}
