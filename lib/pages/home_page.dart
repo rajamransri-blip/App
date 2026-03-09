@@ -1,5 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shop_app_flutter/pages/cart_page.dart';
+import 'package:shop_app_flutter/pages/community_page.dart';
+import 'package:shop_app_flutter/providers/settings_provider.dart';
 import 'package:shop_app_flutter/widgets/product_list.dart';
 
 class HomePage extends StatefulWidget {
@@ -12,37 +16,46 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int currentPage = 0;
 
-  List<Widget> pages = const [ProductList(), CartPage()];
-
   @override
   Widget build(BuildContext context) {
+    final isCommunityOn = Provider.of<SettingsProvider>(context).isCommunityOn;
+
+    // Handle index out of bounds if community is turned off while on that tab
+    if (!isCommunityOn && currentPage == 2) {
+      currentPage = 0;
+    }
+
+    List<Widget> pages = [
+      const ProductList(),
+      const CartPage(),
+      if (isCommunityOn) const CommunityPage(),
+    ];
+
+    List<BottomNavigationBarItem> navItems = [
+      const BottomNavigationBarItem(icon: Icon(CupertinoIcons.book), label: 'Read'),
+      const BottomNavigationBarItem(icon: Icon(CupertinoIcons.bookmark), label: 'Saved'),
+      if (isCommunityOn)
+        const BottomNavigationBarItem(icon: Icon(CupertinoIcons.person_3), label: 'Community'),
+    ];
+
     return Scaffold(
       body: IndexedStack(
         index: currentPage,
         children: pages,
       ),
       bottomNavigationBar: BottomNavigationBar(
-        iconSize: 30,
-        selectedItemColor: Theme.of(context).colorScheme.primary,
+        iconSize: 28,
+        selectedItemColor: Colors.teal,
         unselectedItemColor: Colors.grey,
-        selectedFontSize: 12,
-        unselectedFontSize: 12,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        elevation: 10,
         onTap: (value) {
           setState(() {
             currentPage = value;
           });
         },
         currentIndex: currentPage,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.menu_book),
-            label: 'Read',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.bookmark),
-            label: 'Saved',
-          ),
-        ],
+        items: navItems,
       ),
     );
   }
