@@ -4,8 +4,12 @@ class CartProvider extends ChangeNotifier {
   final List<Map<String, dynamic>> cart = [];
 
   void addProduct(Map<String, dynamic> product) {
-    cart.add(product);
-    notifyListeners();
+    // Check if already saved to prevent duplicates
+    bool isAlreadySaved = cart.any((item) => item['id'] == product['id']);
+    if (!isAlreadySaved) {
+      cart.add(product);
+      notifyListeners();
+    }
   }
 
   void removeProduct(Map<String, dynamic> product) {
