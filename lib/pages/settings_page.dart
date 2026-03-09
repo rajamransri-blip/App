@@ -2,9 +2,29 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shop_app_flutter/providers/settings_provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
+
+  // URL Launch karne ka 100% working function
+  Future<void> _launchURL(BuildContext context) async {
+    final Uri url = Uri.parse('https://github.com/rajamransri-blip');
+    
+    try {
+      // Ye command Android ko force karti hai external Chrome/Browser open karne ke liye
+      await launchUrl(url, mode: LaunchMode.externalApplication);
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Error: Link open nahi ho pa raha hai.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +63,7 @@ class SettingsPage extends StatelessWidget {
                   onTap: () {
                     showDialog(context: context, builder: (_) => const AlertDialog(
                       title: Text('About'),
-                      content: Text('Islamic Collection App v1.0\nDeveloped with Flutter.'),
+                      content: Text('Islamic Collection App v1.0\nDeveloped with Flutter.\nA peaceful app for daily Duas and Ayahs.'),
                     ));
                   },
                 ),
@@ -61,13 +81,8 @@ class SettingsPage extends StatelessWidget {
                 ListTile(
                   leading: const Icon(CupertinoIcons.cloud_download),
                   title: const Text('Check for Updates'),
-                  onTap: () {
-                    // Requires 'url_launcher' package.
-                    // launchUrl(Uri.parse('https://your-website.com'));
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Redirecting to browser...')),
-                    );
-                  },
+                  // Yahan par function call ho raha hai
+                  onTap: () => _launchURL(context), 
                 ),
               ],
             ),
