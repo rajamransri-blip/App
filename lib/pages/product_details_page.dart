@@ -1,107 +1,88 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shop_app_flutter/providers/cart_provider.dart';
 
-class ProductDetailsPage extends StatefulWidget {
-  final Map<String, Object> product;
-  const ProductDetailsPage({
-    super.key,
-    required this.product,
-  });
-
-  @override
-  State<ProductDetailsPage> createState() => _ProductDetailsPageState();
-}
-
-class _ProductDetailsPageState extends State<ProductDetailsPage> {
+class ProductDetailsPage extends StatelessWidget {
+  final Map<String, dynamic> product;
   
-  void onTap() {
-    Provider.of<CartProvider>(context, listen: false).addProduct(
-      {
-        'id': widget.product['id'],
-        'title': widget.product['title'],
-        'arabic': widget.product['arabic'],
-        'translation': widget.product['translation'],
-        'category': widget.product['category'],
-      },
-    );
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: const Text('Saved successfully!'),
-        backgroundColor: Theme.of(context).colorScheme.primary,
-      ),
-    );
-  }
+  const ProductDetailsPage({super.key, required this.product});
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Read Content'),
+        title: Text(product['category']),
+        centerTitle: true,
+        elevation: 0,
+        backgroundColor: Colors.transparent,
       ),
       body: Column(
         children: [
-          Text(
-            widget.product['title'] as String,
-            style: Theme.of(context).textTheme.titleLarge,
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 20),
           Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Text(
-                      widget.product['arabic'] as String,
-                      style: const TextStyle(
-                        fontSize: 28,
-                        height: 1.5,
-                      ),
-                      textAlign: TextAlign.center,
-                      textDirection: TextDirection.rtl,
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Image.asset(
+                    product['imageUrl'],
+                    height: 200,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) => Container(
+                      height: 200,
+                      color: isDark ? Colors.grey[800] : Colors.grey[300],
+                      child: const Icon(CupertinoIcons.photo, size: 50),
                     ),
-                    const SizedBox(height: 30),
-                    Text(
-                      widget.product['translation'] as String,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        color: Colors.black87,
-                        height: 1.4,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          Container(
-            padding: const EdgeInsets.symmetric(vertical: 20),
-            decoration: const BoxDecoration(
-              color: Color.fromRGBO(245, 247, 249, 1),
-              borderRadius: BorderRadius.vertical(top: Radius.circular(40)),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: ElevatedButton(
-                onPressed: onTap,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Theme.of(context).colorScheme.primary,
-                  fixedSize: const Size(350, 50),
-                ),
-                child: const Text(
-                  'Save to Bookmarks',
-                  style: TextStyle(
-                    color: Colors.white, // Text color changed to white for green button
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
                   ),
-                ),
+                  Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Column(
+                      children: [
+                        Text(
+                          product['title'],
+                          style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 20),
+                        Text(
+                          product['arabic'],
+                          style: const TextStyle(fontSize: 26, height: 1.8),
+                          textAlign: TextAlign.center,
+                          textDirection: TextDirection.rtl,
+                        ),
+                        const SizedBox(height: 30),
+                        Text(
+                          product['translation'],
+                          style: const TextStyle(fontSize: 18, height: 1.5),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: ElevatedButton.icon(
+              onPressed: () {
+                Provider.of<CartProvider>(context, listen: false).addProduct(product);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Saved to Bookmarks!'), backgroundColor: Colors.teal),
+                );
+              },
+              icon: const Icon(CupertinoIcons.bookmark_solid, color: Colors.white),
+              label: const Text('Save Content', style: TextStyle(color: Colors.white, fontSize: 18)),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.teal,
+                minimumSize: const Size(double.infinity, 55),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+              ),
+            ),
+          )
         ],
       ),
     );
