@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shop_app_flutter/providers/cart_provider.dart';
-import 'package:shop_app_flutter/providers/settings_provider.dart';
+import 'package:shop_app_flutter/providers/api_provider.dart';
 import 'package:shop_app_flutter/pages/home_page.dart';
 
 void main() {
@@ -16,12 +16,12 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => CartProvider()),
-        ChangeNotifierProvider(create: (context) => SettingsProvider()),
+        ChangeNotifierProvider(create: (context) => ApiProvider()), // Cloud Provider
       ],
       child: MaterialApp(
         title: 'Islamic Collection',
         debugShowCheckedModeBanner: false,
-        themeMode: ThemeMode.system, // Dark/Light system pe depend karega
+        themeMode: ThemeMode.system,
         theme: ThemeData(
           fontFamily: 'Lato',
           brightness: Brightness.light,
