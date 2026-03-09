@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shop_app_flutter/pages/cart_page.dart';
 import 'package:shop_app_flutter/pages/community_page.dart';
-import 'package:shop_app_flutter/providers/settings_provider.dart';
+import 'package:shop_app_flutter/providers/data_provider.dart';
 import 'package:shop_app_flutter/widgets/product_list.dart';
 
 class HomePage extends StatefulWidget {
@@ -18,9 +18,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final isCommunityOn = Provider.of<SettingsProvider>(context).isCommunityOn;
+    final isCommunityOn = Provider.of<DataProvider>(context).isCommunityOn;
 
-    // Handle index out of bounds if community is turned off while on that tab
     if (!isCommunityOn && currentPage == 2) {
       currentPage = 0;
     }
@@ -39,21 +38,14 @@ class _HomePageState extends State<HomePage> {
     ];
 
     return Scaffold(
-      body: IndexedStack(
-        index: currentPage,
-        children: pages,
-      ),
+      body: IndexedStack(index: currentPage, children: pages),
       bottomNavigationBar: BottomNavigationBar(
         iconSize: 28,
         selectedItemColor: Colors.teal,
         unselectedItemColor: Colors.grey,
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         elevation: 10,
-        onTap: (value) {
-          setState(() {
-            currentPage = value;
-          });
-        },
+        onTap: (value) => setState(() => currentPage = value),
         currentIndex: currentPage,
         items: navItems,
       ),
