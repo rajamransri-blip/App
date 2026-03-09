@@ -17,39 +17,27 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => CartProvider()),
       ],
       child: MaterialApp(
-        title: 'Shopping App',
+        title: 'Islamic App',
+        debugShowCheckedModeBanner: false,
         theme: ThemeData(
           fontFamily: 'Lato',
           colorScheme: ColorScheme.fromSeed(
-            seedColor: const Color.fromRGBO(254, 206, 1, 1),
-            primary: const Color.fromRGBO(254, 206, 1, 1),
+            seedColor: Colors.teal,
+            primary: Colors.teal,
           ),
           appBarTheme: const AppBarTheme(
+            elevation: 0,
+            centerTitle: true,
             titleTextStyle: TextStyle(
-              fontSize: 20,
+              fontSize: 22,
               color: Colors.black,
-            ),
-          ),
-          inputDecorationTheme: const InputDecorationTheme(
-            hintStyle: TextStyle(
               fontWeight: FontWeight.bold,
-              fontSize: 16,
             ),
-            prefixIconColor: Color.fromRGBO(119, 119, 119, 1),
           ),
           textTheme: const TextTheme(
-            titleLarge: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 35,
-            ),
-            titleMedium: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 20,
-            ),
-            bodySmall: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
-            ),
+            titleLarge: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
+            titleMedium: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+            bodySmall: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
           ),
           useMaterial3: true,
         ),
