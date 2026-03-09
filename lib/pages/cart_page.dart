@@ -7,81 +7,44 @@ class CartPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cart = context.watch<CartProvider>().cart;
+    final cart = Provider.of<CartProvider>(context).cart;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Cart'),
+        title: const Text('Saved Items'),
       ),
-      body: ListView.builder(
-        itemCount: cart.length,
-        itemBuilder: (context, index) {
-          final cartItem = cart[index];
+      body: cart.isEmpty
+          ? const Center(
+              child: Text(
+                'No saved items yet.',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+            )
+          : ListView.builder(
+              itemCount: cart.length,
+              itemBuilder: (context, index) {
+                final cartItem = cart[index];
 
-          return ListTile(
-            leading: CircleAvatar(
-              backgroundImage: AssetImage(cartItem['imageUrl'] as String),
-              radius: 30,
-            ),
-            trailing: IconButton(
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (context) {
-                    return AlertDialog(
-                      title: Text(
-                        'Delete Product',
-                        style: Theme.of(context).textTheme.titleMedium,
-                      ),
-                      content: const Text(
-                        'Are you sure you want to remove the product from your cart?',
-                      ),
-                      actions: [
-                        TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: const Text(
-                            'No',
-                            style: TextStyle(
-                              color: Colors.blue,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            context
-                                .read<CartProvider>()
-                                .removeProduct(cartItem);
-                            Navigator.of(context).pop();
-                          },
-                          child: const Text(
-                            'Yes',
-                            style: TextStyle(
-                              color: Colors.red,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ],
-                    );
-                  },
+                return ListTile(
+                  leading: CircleAvatar(
+                    backgroundColor: Theme.of(context).colorScheme.primary,
+                    child: const Icon(Icons.bookmark, color: Colors.white),
+                  ),
+                  title: Text(
+                    cartItem['title'].toString(),
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                  subtitle: Text(cartItem['category'].toString()),
+                  trailing: IconButton(
+                    onPressed: () {
+                      Provider.of<CartProvider>(context, listen: false)
+                          .removeProduct(cartItem);
+                    },
+                    icon: const Icon(Icons.delete, color: Colors.red),
+                  ),
                 );
               },
-              icon: const Icon(
-                Icons.delete,
-                color: Colors.red,
-              ),
             ),
-            title: Text(
-              cartItem['title'].toString(),
-              style: Theme.of(context).textTheme.bodySmall,
-            ),
-            subtitle: Text('Size: ${cartItem['size']}'),
-          );
-        },
-      ),
     );
   }
 }
