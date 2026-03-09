@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shop_app_flutter/providers/cart_provider.dart';
+import 'package:shop_app_flutter/providers/settings_provider.dart';
 import 'package:shop_app_flutter/pages/home_page.dart';
 
 void main() {
@@ -15,30 +16,24 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => CartProvider()),
+        ChangeNotifierProvider(create: (context) => SettingsProvider()),
       ],
       child: MaterialApp(
-        title: 'Islamic App',
+        title: 'Islamic Collection',
         debugShowCheckedModeBanner: false,
+        themeMode: ThemeMode.system, // Dark/Light system pe depend karega
         theme: ThemeData(
           fontFamily: 'Lato',
-          colorScheme: ColorScheme.fromSeed(
-            seedColor: Colors.teal,
-            primary: Colors.teal,
-          ),
-          appBarTheme: const AppBarTheme(
-            elevation: 0,
-            centerTitle: true,
-            titleTextStyle: TextStyle(
-              fontSize: 22,
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          textTheme: const TextTheme(
-            titleLarge: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
-            titleMedium: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-            bodySmall: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-          ),
+          brightness: Brightness.light,
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.teal, brightness: Brightness.light),
+          scaffoldBackgroundColor: const Color(0xFFF8F9FA),
+          useMaterial3: true,
+        ),
+        darkTheme: ThemeData(
+          fontFamily: 'Lato',
+          brightness: Brightness.dark,
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.teal, brightness: Brightness.dark),
+          scaffoldBackgroundColor: const Color(0xFF121212),
           useMaterial3: true,
         ),
         home: const HomePage(),
