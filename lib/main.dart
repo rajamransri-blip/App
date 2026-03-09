@@ -5,6 +5,7 @@ import 'package:shop_app_flutter/providers/api_provider.dart';
 import 'package:shop_app_flutter/pages/home_page.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized(); // App ko safe start karne ke liye
   runApp(const MyApp());
 }
 
@@ -15,8 +16,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => CartProvider()),
-        ChangeNotifierProvider(create: (context) => ApiProvider()), // Cloud Provider
+        ChangeNotifierProvider(create: (_) => CartProvider()),
+        // Ye line missing hone se grey screen aati hai, isko check karein:
+        ChangeNotifierProvider(create: (_) => ApiProvider()), 
       ],
       child: MaterialApp(
         title: 'Islamic Collection',
