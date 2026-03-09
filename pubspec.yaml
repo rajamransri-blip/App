@@ -12,7 +12,6 @@ dependencies:
   provider: ^6.0.5
   cupertino_icons: ^1.0.2
   url_launcher: ^6.2.5
-  http: ^1.2.0    # <-- Naya package JSON fetch karne ke liye
 
 dev_dependencies:
   flutter_test:
@@ -23,6 +22,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/
+    - assets/data.json    # <-- Ye line add karna sabse zaroori hai!
   fonts:
     - family: Lato
       fonts:
