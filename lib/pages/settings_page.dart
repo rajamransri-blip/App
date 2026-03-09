@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shop_app_flutter/providers/api_provider.dart';
+import 'package:shop_app_flutter/providers/data_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SettingsPage extends StatelessWidget {
@@ -20,12 +20,12 @@ class SettingsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final api = Provider.of<ApiProvider>(context);
+    final appData = Provider.of<DataProvider>(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
       appBar: AppBar(title: const Text('Settings'), backgroundColor: Colors.transparent, elevation: 0),
-      body: api.isLoading 
+      body: appData.isLoading 
         ? const Center(child: CircularProgressIndicator(color: Colors.teal))
         : ListView(
         padding: const EdgeInsets.all(20),
@@ -36,9 +36,9 @@ class SettingsPage extends StatelessWidget {
               title: const Text('Community Feature', style: TextStyle(fontWeight: FontWeight.bold)),
               subtitle: const Text('Enable community tab on home'),
               trailing: CupertinoSwitch(
-                value: api.isCommunityOn,
+                value: appData.isCommunityOn,
                 activeColor: Colors.teal,
-                onChanged: (value) => api.toggleCommunity(value),
+                onChanged: (value) => appData.toggleCommunity(value),
               ),
             ),
           ),
@@ -53,30 +53,25 @@ class SettingsPage extends StatelessWidget {
                   onTap: () {
                     showDialog(context: context, builder: (_) => AlertDialog(
                       title: const Text('About'),
-                      content: Text(api.aboutAppText),
+                      content: Text(appData.aboutAppText),
                     ));
                   },
                 ),
                 const Divider(height: 1),
-                
-                // Ye tabhi dikhega jab GitHub json mein 'showContactUs' true hoga
-                if (api.showContactUs)
+                if (appData.showContactUs)
                   ListTile(
                     leading: const Icon(CupertinoIcons.mail),
                     title: const Text('Contact Us'),
-                    onTap: () {
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Contact: ${api.contactEmail}')));
-                    },
+                    onTap: () => ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Contact: ${appData.contactEmail}'))),
                   ),
-                if (api.showContactUs) const Divider(height: 1),
-                
+                if (appData.showContactUs) const Divider(height: 1),
                 ListTile(
                   leading: const Icon(CupertinoIcons.cloud_download),
                   title: const Text('Check for Updates'),
-                  subtitle: Text('Current Version: 1.0.0 | Latest: ${api.latestVersion}'),
+                  subtitle: Text('Current: 1.0.0 | Latest: ${appData.latestVersion}'),
                   onTap: () {
-                    if ('1.0.0' != api.latestVersion) {
-                      _launchURL(context, api.updateUrl);
+                    if ('1.0.0' != appData.latestVersion) {
+                      _launchURL(context, appData.updateUrl);
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('You are on the latest version!'), backgroundColor: Colors.teal));
                     }
@@ -91,13 +86,6 @@ class SettingsPage extends StatelessWidget {
   }
 
   Widget _buildCard({required bool isDark, required Widget child}) {
-    return Container(
-      decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
-        borderRadius: BorderRadius.circular(15),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10)],
-      ),
-      child: child,
-    );
+    return Container(decoration: BoxDecoration(color: isDark ? const Color(0xFF1E1E1E) : Colors.white, borderRadius: BorderRadius.circular(15), boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10)]), child: child);
   }
 }
