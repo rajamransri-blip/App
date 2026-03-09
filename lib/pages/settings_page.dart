@@ -1,43 +1,33 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shop_app_flutter/providers/settings_provider.dart';
+import 'package:shop_app_flutter/providers/api_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
 
-  // URL Launch karne ka 100% working function
-  Future<void> _launchURL(BuildContext context) async {
-    final Uri url = Uri.parse('https://github.com/rajamransri-blip');
-    
+  Future<void> _launchURL(BuildContext context, String urlString) async {
+    final Uri url = Uri.parse(urlString);
     try {
-      // Ye command Android ko force karti hai external Chrome/Browser open karne ke liye
       await launchUrl(url, mode: LaunchMode.externalApplication);
     } catch (e) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Error: Link open nahi ho pa raha hai.'),
-            backgroundColor: Colors.red,
-          ),
-        );
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Could not open link'), backgroundColor: Colors.red));
       }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final settings = Provider.of<SettingsProvider>(context);
+    final api = Provider.of<ApiProvider>(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Settings'),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
-      body: ListView(
+      appBar: AppBar(title: const Text('Settings'), backgroundColor: Colors.transparent, elevation: 0),
+      body: api.isLoading 
+        ? const Center(child: CircularProgressIndicator(color: Colors.teal))
+        : ListView(
         padding: const EdgeInsets.all(20),
         children: [
           _buildCard(
@@ -46,9 +36,9 @@ class SettingsPage extends StatelessWidget {
               title: const Text('Community Feature', style: TextStyle(fontWeight: FontWeight.bold)),
               subtitle: const Text('Enable community tab on home'),
               trailing: CupertinoSwitch(
-                value: settings.isCommunityOn,
+                value: api.isCommunityOn,
                 activeColor: Colors.teal,
-                onChanged: (value) => settings.toggleCommunity(value),
+                onChanged: (value) => api.toggleCommunity(value),
               ),
             ),
           ),
@@ -61,28 +51,36 @@ class SettingsPage extends StatelessWidget {
                   leading: const Icon(CupertinoIcons.info_circle),
                   title: const Text('About App'),
                   onTap: () {
-                    showDialog(context: context, builder: (_) => const AlertDialog(
-                      title: Text('About'),
-                      content: Text('Islamic Collection App v1.0\nDeveloped with Flutter.\nA peaceful app for daily Duas and Ayahs.'),
+                    showDialog(context: context, builder: (_) => AlertDialog(
+                      title: const Text('About'),
+                      content: Text(api.aboutAppText),
                     ));
                   },
                 ),
                 const Divider(height: 1),
-                ListTile(
-                  leading: const Icon(CupertinoIcons.mail),
-                  title: const Text('Contact Us'),
-                  onTap: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Contact: support@islamicapp.com')),
-                    );
-                  },
-                ),
-                const Divider(height: 1),
+                
+                // Ye tabhi dikhega jab GitHub json mein 'showContactUs' true hoga
+                if (api.showContactUs)
+                  ListTile(
+                    leading: const Icon(CupertinoIcons.mail),
+                    title: const Text('Contact Us'),
+                    onTap: () {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Contact: ${api.contactEmail}')));
+                    },
+                  ),
+                if (api.showContactUs) const Divider(height: 1),
+                
                 ListTile(
                   leading: const Icon(CupertinoIcons.cloud_download),
                   title: const Text('Check for Updates'),
-                  // Yahan par function call ho raha hai
-                  onTap: () => _launchURL(context), 
+                  subtitle: Text('Current Version: 1.0.0 | Latest: ${api.latestVersion}'),
+                  onTap: () {
+                    if ('1.0.0' != api.latestVersion) {
+                      _launchURL(context, api.updateUrl);
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('You are on the latest version!'), backgroundColor: Colors.teal));
+                    }
+                  },
                 ),
               ],
             ),
